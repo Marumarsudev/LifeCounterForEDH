@@ -5,7 +5,6 @@ using UnityEngine;
 public static class Settings
 {
     private static int playerCount = 4;
-
     public static int PlayerCount
     {
         get
@@ -24,7 +23,6 @@ public static class Settings
     }
 
     private static int startingLife = 40;
-
     public static int StartingLife
     {
         get
@@ -37,6 +35,19 @@ public static class Settings
                 startingLife = 1;
             else
                 startingLife = value;
+        }
+    }
+
+    private static bool alternativeSeating = false;
+    public static bool AlternativeSeating
+    {
+        get
+        {
+            return alternativeSeating;
+        }
+        set
+        {
+            alternativeSeating = value;
         }
     }
 }

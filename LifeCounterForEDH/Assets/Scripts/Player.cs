@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public RectTransform rectTransform;
 
     public SpriteRenderer poisonSprite;
+    public SpriteRenderer playerSprite;
 
     public TextMeshProUGUI lifeText;
 
@@ -24,8 +25,13 @@ public class Player : MonoBehaviour
 
         lifeText.text = _life.ToString();
 
-        rectTransform.position = _pos;
-        rectTransform.rotation = Quaternion.Euler(_rot);
+        rectTransform.localPosition = _pos;
+        rectTransform.localRotation = Quaternion.Euler(_rot);
+    }
+
+    public void ChangeColor(Color color)
+    {
+        playerSprite.color = color;
     }
 
     private void UpdateUI()
@@ -40,6 +46,20 @@ public class Player : MonoBehaviour
         }
     }
 
+    public void FlashStarter()
+    {
+        lifeText.DOColor(Color.yellow, 0.2f)
+        .SetEase(Ease.Flash)
+        .SetLoops(9, LoopType.Yoyo)
+        .OnComplete(() => {lifeText.DOColor(Color.white, 0.5f);});
+    }
+
+    private void FlashCounter(Color color)
+    {
+        lifeText.DOColor(color, 0.2f)
+        .OnComplete(() => {lifeText.DOColor(Color.white, 0.2f);});
+    }
+
     public void SwapPoison()
     {
         isPoison = !isPoison;
@@ -52,10 +72,12 @@ public class Player : MonoBehaviour
 
         if(isPoison)
         {
+            playerSprite.DOFade(0, 0.5f);
             poisonSprite.DOFade(1, 0.5f);
         }
         else
         {
+            playerSprite.DOFade(1, 0.5f);
             poisonSprite.DOFade(0, 0.5f);
         }
     }
@@ -76,6 +98,14 @@ public class Player : MonoBehaviour
     private void ChangeLife(int value)
     {
         life += value;
+        if(value < 0)
+        {
+            FlashCounter(Color.red);
+        }
+        else
+        {
+            FlashCounter(Color.green);
+        }
     }
 
     private void ChangePoison(int value)
